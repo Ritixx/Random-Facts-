@@ -26,16 +26,16 @@ async function getNewFact() {
         // Apply Typing Effect
         typeFact(factText);
 
-        // Extract a keyword for the background image
+        // Extract a keyword for the image
         const keywords = factText.match(/\b[A-Za-z]{4,}\b/g); // Extract words with 4+ letters
         const keyword = keywords ? keywords[Math.floor(Math.random() * keywords.length)] : "random";
 
-        // Fetch a relevant background image from Unsplash
-        const bgImageElement = document.getElementById("bg-image");
-        bgImageElement.style.opacity = 0; // Fade out old image
+        // Fetch a relevant image from Unsplash
+        const factImage = document.getElementById("fact-image");
+        factImage.style.opacity = 0; // Fade out old image
         setTimeout(() => {
-            bgImageElement.src = `https://source.unsplash.com/1600x900/?${keyword}`;
-            bgImageElement.style.opacity = 1; // Fade in new image
+            factImage.src = `https://source.unsplash.com/400x300/?${keyword}`;
+            factImage.style.opacity = 1; // Fade in new image
         }, 500);
     } catch (error) {
         console.error("Error fetching fact:", error);
