@@ -1,99 +1,14 @@
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-    color: white;
-}
-
-.container {
-    background: rgba(0, 0, 0, 0.75);
-    padding: 30px;
-    width: 80%;
-    max-width: 700px;
-    border-radius: 10px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
-    transition: 0.3s;
-    text-align: center;
-}
-
-h1 {
-    font-size: 26px;
-    color: #ffcc00;
-    margin-bottom: 20px;
-}
-
-#fact-box {
-    font-size: 22px;
-    font-weight: bold;
-    min-height: 100px;
-    line-height: 1.6;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    margin-bottom: 25px;
-}
-
 #fact-image-container {
-    margin: 20px 0;
-    min-height: 300px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-    border-radius: 8px;
-    position: relative;
-    background: rgba(255, 255, 255, 0.1);
+    /* Add loading spinner */
+    background: rgba(255, 255, 255, 0.1) url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%23fff" d="M73 50c0-12.7-10.3-23-23-23S27 37.3 27 50m3.9 0c0-10.5 8.5-19.1 19.1-19.1S69.1 39.5 69.1 50"><animateTransform attributeName="transform" type="rotate" dur="1s" from="0 50 50" to="360 50 50" repeatCount="indefinite"/></svg>') no-repeat center;
+    background-size: 50px;
 }
 
 #fact-image {
-    width: auto;
-    height: auto;
-    max-width: 100%;
-    max-height: 300px;
-    object-fit: cover;
-    transition: opacity 0.5s ease-in-out;
-    opacity: 1;
+    /* Hide broken image icon */
+    font-size: 0;
 }
 
-.image-loading {
-    opacity: 0.3;
-}
-
-.button-container {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 20px;
-}
-
-button {
-    background-color: #4a8fe7;
-    color: white;
-    border: none;
-    padding: 12px 20px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    transition: background-color 0.3s, transform 0.2s;
-}
-
-button:hover {
-    background-color: #3a7fd7;
-    transform: translateY(-2px);
-}
-
-button:active {
-    transform: translateY(0);
-}
-
-#copy-btn {
-    background-color: #28a745;
-}
-
-#copy-btn:hover {
-    background-color: #218838;
+#fact-image[src=""] {
+    opacity: 0;
 }
