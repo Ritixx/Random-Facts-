@@ -39,28 +39,38 @@ function updateImage(keyword) {
     const imageElement = document.getElementById("fact-image");
     const imageContainer = document.getElementById("fact-image-container");
     
-    // Add loading class
-    imageElement.classList.add("image-loading");
+    // Show loading state
+    imageElement.style.opacity = "0.3";
     
-    // Create a fallback timer in case the image doesn't load
-    const fallbackTimer = setTimeout(() => {
-        imageElement.src = `https://source.unsplash.com/800x600/?random,knowledge`;
+    // Use a placeholder while the actual image loads
+    imageElement.src = "https://via.placeholder.com/800x600.png?text=Loading+image...";
+    
+    // Create new image object to test loading before assigning to DOM
+    const newImage = new Image();
+    
+    // Set up timeout for slow-loading images
+    const timeoutId = setTimeout(() => {
+        console.log("Image load timeout - using fallback");
+        imageElement.src = "https://source.unsplash.com/800x600/?knowledge,fact";
+        imageElement.style.opacity = "1";
     }, 5000);
     
-    // Fetch a relevant image from Unsplash
-    imageElement.src = `https://source.unsplash.com/800x600/?${keyword}`;
-    
-    // When the image loads
-    imageElement.onload = () => {
-        clearTimeout(fallbackTimer);
-        imageElement.classList.remove("image-loading");
+    // Configure the new image
+    newImage.onload = function() {
+        clearTimeout(timeoutId);
+        imageElement.src = this.src;
+        imageElement.style.opacity = "1";
     };
     
-    // If there's an error loading the image
-    imageElement.onerror = () => {
-        clearTimeout(fallbackTimer);
-        imageElement.src = `https://source.unsplash.com/800x600/?random,knowledge`;
+    newImage.onerror = function() {
+        clearTimeout(timeoutId);
+        console.log("Image load error - using fallback");
+        imageElement.src = "https://source.unsplash.com/800x600/?knowledge,fact";
+        imageElement.style.opacity = "1";
     };
+    
+    // Start loading the image
+    newImage.src = `https://source.unsplash.com/800x600/?${encodeURIComponent(keyword)}`;
 }
 
 // Function to Fetch a New Fact
@@ -69,6 +79,7 @@ async function getNewFact() {
         // Disable the button while loading
         const button = document.getElementById("new-fact-btn");
         button.disabled = true;
+        button.textContent = "Loading...";
         
         const response = await fetch(FACT_API_URL);
         const data = await response.json();
@@ -87,12 +98,19 @@ async function getNewFact() {
         // Re-enable the button
         setTimeout(() => {
             button.disabled = false;
+            button.textContent = "🔄 Get a New Fact";
         }, 1000);
         
     } catch (error) {
         console.error("Error fetching fact:", error);
         typeFact("Oops! Could not load a new fact. Try again.");
+        
+        // Show a generic image
+        document.getElementById("fact-image").src = "https://source.unsplash.com/800x600/?error,oops";
+        
+        // Re-enable button
         document.getElementById("new-fact-btn").disabled = false;
+        document.getElementById("new-fact-btn").textContent = "🔄 Get a New Fact";
     }
 }
 
@@ -118,5 +136,11 @@ function copyFact() {
 document.getElementById("new-fact-btn").addEventListener("click", getNewFact);
 document.getElementById("copy-btn").addEventListener("click", copyFact);
 
-// Load the first fact automatically when the page loads
-window.addEventListener("DOMContentLoaded", getNewFact);
+// Initialize by setting a placeholder image
+document.addEventListener("DOMContentLoaded", function() {
+    const imageElement = document.getElementById("fact-image");
+    imageElement.src = "https://source.unsplash.com/800x600/?fact,knowledge";
+    
+    // Load the first fact
+    getNewFact();
+});
