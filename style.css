@@ -1,34 +1,100 @@
-/* Fact Box */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+    color: white;
+}
+
+/* Container */
 .container {
     background: rgba(0, 0, 0, 0.75);
     padding: 30px;
-    width: 60%;
-    max-width: 600px;
+    width: 80%;
+    max-width: 700px;
     border-radius: 10px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+    transition: 0.3s;
     text-align: center;
-    color: white;
 }
 
 h1 {
     font-size: 26px;
     color: #ffcc00;
+    margin-bottom: 20px;
 }
 
+/* Fact Box */
 #fact-box {
     font-size: 22px;
     font-weight: bold;
-    min-height: 120px;
+    min-height: 100px;
     line-height: 1.6;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    margin-bottom: 25px;
 }
 
 /* Fact Image */
-.fact-img {
-    margin-top: 20px;
-    width: 80%; /* Adjust size */
-    max-width: 400px;
-    height: auto;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+#fact-image-container {
+    margin: 20px 0;
+    height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border-radius: 8px;
+    position: relative;
+}
+
+#fact-image {
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: contain;
     transition: opacity 0.5s ease-in-out;
+    opacity: 1;
+}
+
+.image-loading {
+    opacity: 0.3;
+}
+
+/* Button Styles */
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+button {
+    background-color: #4a8fe7;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background-color: #3a7fd7;
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+#copy-btn {
+    background-color: #28a745;
+}
+
+#copy-btn:hover {
+    background-color: #218838;
 }
