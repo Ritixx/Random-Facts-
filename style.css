@@ -1,16 +1,3 @@
-/* Background Image (Fullscreen) */
-.background-img {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    z-index: -1;
-    filter: brightness(70%); /* Darken for readability */
-    transition: opacity 1s ease-in-out;
-}
-
 /* Fact Box */
 .container {
     background: rgba(0, 0, 0, 0.75);
@@ -19,7 +6,8 @@
     max-width: 600px;
     border-radius: 10px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
-    transition: 0.3s;
+    text-align: center;
+    color: white;
 }
 
 h1 {
@@ -32,6 +20,15 @@ h1 {
     font-weight: bold;
     min-height: 120px;
     line-height: 1.6;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
+/* Fact Image */
+.fact-img {
+    margin-top: 20px;
+    width: 80%; /* Adjust size */
+    max-width: 400px;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: opacity 0.5s ease-in-out;
+}
