@@ -28,11 +28,12 @@ async function getNewFact() {
 
         // Extract a keyword for the background image
         const keywords = factText.match(/\b[A-Za-z]{4,}\b/g); // Extract words with 4+ letters
-        const keyword = keywords ? keywords[Math.floor(Math.random() * keywords.length)] : "nature";
+        const keyword = keywords ? keywords[Math.floor(Math.random() * keywords.length)] : "random";
 
         // Fetch a relevant background image from Unsplash
         const bgImageUrl = `https://source.unsplash.com/1600x900/?${keyword}`;
         document.body.style.background = `url('${bgImageUrl}') no-repeat center center/cover`;
+
     } catch (error) {
         console.error("Error fetching fact:", error);
         typeFact("Oops! Could not load a new fact. Try again.");
@@ -53,4 +54,3 @@ document.getElementById("copy-btn").addEventListener("click", copyFact);
 
 // Load the first fact automatically when the page loads
 getNewFact();
-
