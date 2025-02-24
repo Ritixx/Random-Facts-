@@ -10,7 +10,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: background 1s ease-in-out;
+    transition: background 1.5s ease-in-out;
 }
 
 /* Fact Box */
