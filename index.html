@@ -8,107 +8,69 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: white;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-            color: white;
         }
         
         .container {
             background: rgba(0, 0, 0, 0.75);
             padding: 30px;
-            width: 80%;
-            max-width: 700px;
+            max-width: 600px;
+            width: 100%;
             border-radius: 10px;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
-            transition: 0.3s;
-            text-align: center;
         }
         
         h1 {
-            font-size: 26px;
+            font-size: 28px;
             color: #ffcc00;
+            text-align: center;
             margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .logo {
-            margin-right: 10px;
         }
         
         #fact-box {
-            font-size: 22px;
-            font-weight: bold;
-            min-height: 100px;
-            line-height: 1.6;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-            margin-bottom: 25px;
-            padding: 10px;
             background-color: rgba(0, 0, 0, 0.3);
-            border-radius: 5px;
-        }
-        
-        #fact-image-container {
-            margin: 20px 0;
-            height: 300px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #f5f5f5;
+            padding: 15px;
             border-radius: 8px;
-            overflow: hidden;
-            position: relative;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            min-height: 60px;
         }
         
         #fact-image {
-            max-width: 100%;
-            max-height: 300px;
             display: block;
-        }
-        
-        .image-placeholder {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: #333;
-            font-size: 18px;
+            max-width: 100%;
+            height: auto;
+            margin: 20px auto;
+            border-radius: 8px;
+            max-height: 300px;
         }
         
         .button-container {
             display: flex;
             justify-content: center;
             gap: 15px;
-            margin-top: 20px;
         }
         
         button {
             background-color: #4a8fe7;
             color: white;
             border: none;
-            padding: 12px 20px;
-            border-radius: 6px;
+            padding: 10px 15px;
+            border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
-            font-weight: bold;
-            transition: background-color 0.3s, transform 0.2s;
-            display: flex;
-            align-items: center;
+            transition: background-color 0.3s;
         }
         
         button:hover {
             background-color: #3a7fd7;
-            transform: translateY(-2px);
-        }
-        
-        button:active {
-            transform: translateY(0);
         }
         
         #copy-btn {
@@ -119,183 +81,120 @@
             background-color: #218838;
         }
         
-        .button-icon {
-            margin-right: 8px;
+        #loading-indicator {
+            text-align: center;
+            margin: 20px 0;
+            font-style: italic;
+            display: none;
         }
     </style>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const FACT_API_URL = "https://uselessfacts.jsph.pl/api/v2/facts/random?language=en";
-            const factElement = document.getElementById("fact");
-            const factImageElement = document.getElementById("fact-image");
-            const factImageContainer = document.getElementById("fact-image-container");
-            const newFactBtn = document.getElementById("new-fact-btn");
-            const copyBtn = document.getElementById("copy-btn");
-            
-            // Function to Apply Typing Effect
-            function typeFact(text) {
-                factElement.innerHTML = ""; // Clear previous fact
-                let i = 0;
-                function typeWriter() {
-                    if (i < text.length) {
-                        factElement.innerHTML += text.charAt(i);
-                        i++;
-                        setTimeout(typeWriter, 40); // Adjust typing speed
-                    }
-                }
-                typeWriter();
-            }
-            
-            // Function to extract keywords from fact
-            function extractKeywords(factText) {
-                const text = factText.toLowerCase();
-                const words = text.match(/\b[a-z]{4,}\b/g) || [];
-                
-                // Filter out common words
-                const commonWords = ['about', 'there', 'their', 'would', 'should', 'could', 'been', 
-                                    'have', 'this', 'that', 'these', 'those', 'with', 'from', 'were',
-                                    'when', 'where', 'what', 'which', 'while', 'your', 'they', 'them'];
-                                    
-                const filteredWords = words.filter(word => !commonWords.includes(word));
-                
-                // Get primary keyword
-                if (filteredWords.length > 0) {
-                    // Get 1-2 keywords
-                    const numKeywords = Math.min(2, filteredWords.length);
-                    const selectedKeywords = [];
-                    
-                    // Get random keywords
-                    for (let i = 0; i < numKeywords; i++) {
-                        const randomIndex = Math.floor(Math.random() * filteredWords.length);
-                        selectedKeywords.push(filteredWords[randomIndex]);
-                        filteredWords.splice(randomIndex, 1);
-                    }
-                    
-                    return selectedKeywords.join(',');
-                }
-                
-                return "knowledge,interesting";
-            }
-            
-            // Function to safely load an image
-            function loadImage(keyword) {
-                // Show loading placeholder
-                factImageContainer.innerHTML = `
-                    <div class="image-placeholder">
-                        <p>Loading image for: "${keyword}"...</p>
-                    </div>
-                `;
-                
-                // Create a new image element
-                const img = new Image();
-                
-                // Set up load handler
-                img.onload = function() {
-                    // Replace placeholder with actual image
-                    factImageContainer.innerHTML = '';
-                    factImageContainer.appendChild(img);
-                    img.id = 'fact-image';
-                    img.style.opacity = '1';
-                };
-                
-                // Set up error handler
-                img.onerror = function() {
-                    // Try with a more generic keyword
-                    if (keyword !== "fact") {
-                        loadImage("fact");
-                    } else {
-                        factImageContainer.innerHTML = `
-                            <div class="image-placeholder">
-                                <p>Couldn't load image. Try again.</p>
-                            </div>
-                        `;
-                    }
-                };
-                
-                // Set source and start loading
-                img.src = `https://source.unsplash.com/800x450/?${encodeURIComponent(keyword)}`;
-                img.alt = `Image related to: ${keyword}`;
-            }
-            
-            // Function to fetch a new fact
-            async function getNewFact() {
-                try {
-                    // Disable button and show loading state
-                    newFactBtn.disabled = true;
-                    newFactBtn.innerHTML = 'Loading...';
-                    
-                    // Fetch new fact
-                    const response = await fetch(FACT_API_URL);
-                    if (!response.ok) throw new Error('Failed to fetch fact');
-                    
-                    const data = await response.json();
-                    const factText = data.text;
-                    
-                    // Display the fact with typing effect
-                    typeFact(factText);
-                    
-                    // Extract keywords and load related image
-                    const keywords = extractKeywords(factText);
-                    loadImage(keywords);
-                    
-                } catch (error) {
-                    console.error("Error:", error);
-                    factElement.innerHTML = "Oops! Could not load a fact. Please try again.";
-                    loadImage("error");
-                    
-                } finally {
-                    // Re-enable button after a short delay
-                    setTimeout(() => {
-                        newFactBtn.disabled = false;
-                        newFactBtn.innerHTML = '<span class="button-icon">🔄</span> Get a New Fact';
-                    }, 1000);
-                }
-            }
-            
-            // Function to copy fact to clipboard
-            function copyFact() {
-                const factText = factElement.innerText;
-                navigator.clipboard.writeText(factText)
-                    .then(() => {
-                        const originalText = copyBtn.innerHTML;
-                        copyBtn.innerHTML = '<span class="button-icon">✓</span> Copied!';
-                        setTimeout(() => {
-                            copyBtn.innerHTML = originalText;
-                        }, 2000);
-                    })
-                    .catch(err => {
-                        console.error("Copy failed:", err);
-                        alert("Failed to copy to clipboard");
-                    });
-            }
-            
-            // Add event listeners
-            newFactBtn.addEventListener("click", getNewFact);
-            copyBtn.addEventListener("click", copyFact);
-            
-            // Load initial fact
-            getNewFact();
-        });
-    </script>
 </head>
 <body>
     <div class="container">
-        <h1>
-            <img class="logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmNjMDAiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMiAzaDYuMDVhOSA5IDAgMCAxIDEzLjAxIDUuMjQgOS4wMDEgOS4wMDEgMCAwIDEtMzkuMzZoNkwyIDE5VjMiPjwvcGF0aD48L3N2Zz4=" alt="Logo" width="32" height="32">
-            Did You Know?
-        </h1>
-        <div id="fact-box">
-            <p id="fact">Click the button to get a useful fact!</p>
-        </div>
-        <div id="fact-image-container">
-            <div class="image-placeholder">
-                <p>Click "Get a New Fact" to see an image</p>
-            </div>
-        </div>
+        <h1>📚 Did You Know?</h1>
+        <div id="fact-box">Loading a random fact...</div>
+        <div id="loading-indicator">Loading image...</div>
+        <img id="fact-image" src="https://picsum.photos/600/400" alt="Fact-related image">
         <div class="button-container">
-            <button id="new-fact-btn"><span class="button-icon">🔄</span> Get a New Fact</button>
-            <button id="copy-btn"><span class="button-icon">📋</span> Copy</button>
+            <button id="new-fact-btn">🔄 Get a New Fact</button>
+            <button id="copy-btn">📋 Copy</button>
         </div>
     </div>
+
+    <script>
+        // DOM Elements
+        const factBox = document.getElementById('fact-box');
+        const factImage = document.getElementById('fact-image');
+        const newFactBtn = document.getElementById('new-fact-btn');
+        const copyBtn = document.getElementById('copy-btn');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        
+        // Fact API URL
+        const FACT_API_URL = "https://uselessfacts.jsph.pl/api/v2/facts/random?language=en";
+        
+        // Function to show loading state
+        function showLoading() {
+            factBox.textContent = "Loading a random fact...";
+            loadingIndicator.style.display = "block";
+            newFactBtn.disabled = true;
+        }
+        
+        // Function to hide loading state
+        function hideLoading() {
+            loadingIndicator.style.display = "none";
+            newFactBtn.disabled = false;
+        }
+        
+        // Function to extract keywords from fact text
+        function extractKeyword(text) {
+            // Simple keyword extraction - get a longish word
+            const words = text.match(/\b[A-Za-z]{5,}\b/g) || [];
+            if (words.length > 0) {
+                // Get a random word from the list
+                return words[Math.floor(Math.random() * words.length)];
+            }
+            return "random";
+        }
+        
+        // Function to fetch a new fact
+        async function getNewFact() {
+            showLoading();
+            
+            try {
+                // Fetch a random fact
+                const response = await fetch(FACT_API_URL);
+                const data = await response.json();
+                const factText = data.text;
+                
+                // Display the fact
+                factBox.textContent = factText;
+                
+                // Extract a keyword and fetch related image
+                const keyword = extractKeyword(factText);
+                
+                // Use Lorem Picsum with a random seed based on keyword
+                // This ensures we get a different image each time but it's deterministic
+                const seed = Array.from(keyword).reduce((acc, char) => acc + char.charCodeAt(0), 0);
+                factImage.src = `https://picsum.photos/seed/${seed}/600/400`;
+                
+                // Alternative: Use a simple placeholder service
+                // factImage.src = `https://via.placeholder.com/600x400/random.png?text=${encodeURIComponent(keyword)}`;
+                
+            } catch (error) {
+                console.error("Error:", error);
+                factBox.textContent = "Oops! Could not load a fact. Please try again.";
+                factImage.src = "https://picsum.photos/600/400?grayscale";
+            }
+            
+            hideLoading();
+        }
+        
+        // Function to copy fact to clipboard
+        function copyFact() {
+            const factText = factBox.textContent;
+            navigator.clipboard.writeText(factText)
+                .then(() => {
+                    const originalText = copyBtn.textContent;
+                    copyBtn.textContent = "✓ Copied!";
+                    setTimeout(() => {
+                        copyBtn.textContent = originalText;
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error("Copy failed:", err);
+                    alert("Failed to copy to clipboard");
+                });
+        }
+        
+        // Event listeners
+        newFactBtn.addEventListener('click', getNewFact);
+        copyBtn.addEventListener('click', copyFact);
+        
+        // Load initial fact when page loads
+        document.addEventListener('DOMContentLoaded', getNewFact);
+        
+        // Immediately try to load a fact
+        getNewFact();
+    </script>
 </body>
 </html>
