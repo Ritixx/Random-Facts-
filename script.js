@@ -31,9 +31,12 @@ async function getNewFact() {
         const keyword = keywords ? keywords[Math.floor(Math.random() * keywords.length)] : "random";
 
         // Fetch a relevant background image from Unsplash
-        const bgImageUrl = `https://source.unsplash.com/1600x900/?${keyword}`;
-        document.body.style.background = `url('${bgImageUrl}') no-repeat center center/cover`;
-
+        const bgImageElement = document.getElementById("bg-image");
+        bgImageElement.style.opacity = 0; // Fade out old image
+        setTimeout(() => {
+            bgImageElement.src = `https://source.unsplash.com/1600x900/?${keyword}`;
+            bgImageElement.style.opacity = 1; // Fade in new image
+        }, 500);
     } catch (error) {
         console.error("Error fetching fact:", error);
         typeFact("Oops! Could not load a new fact. Try again.");
