@@ -1,29 +1,5 @@
 const FACT_API_URL = "https://uselessfacts.jsph.pl/api/v2/facts/random?language=en";
 
-// HD Background Images Based on Keywords
-const keywordImages = {
-    "Bangladesh": "images/bangladesh-map-hd.jpg",
-    "house": "images/house-hd.jpg",
-    "space": "images/space-hd.jpg",
-    "ocean": "images/ocean-hd.jpg",
-    "history": "images/history-hd.jpg",
-    "science": "images/science-hd.jpg",
-    "animal": "images/animal-hd.jpg",
-    "technology": "images/technology-hd.jpg",
-    "nature": "images/nature-hd.jpg",
-    "sports": "images/sports-hd.jpg",
-    "food": "images/food-hd.jpg",
-    "music": "images/music-hd.jpg",
-    "universe": "images/universe-hd.jpg",
-    "mountains": "images/mountains-hd.jpg",
-    "forest": "images/forest-hd.jpg",
-    "art": "images/art-hd.jpg",
-    "math": "images/math-hd.jpg",
-    "invention": "images/invention-hd.jpg",
-    "health": "images/health-hd.jpg",
-    "weather": "images/weather-hd.jpg",
-};
-
 // Function to Apply Typing Effect
 function typeFact(text) {
     const factElement = document.getElementById("fact");
@@ -34,7 +10,7 @@ function typeFact(text) {
         if (i < text.length) {
             factElement.innerHTML += `<strong>${text.charAt(i)}</strong>`;
             i++;
-            setTimeout(typeWriter, 40); // Adjust typing speed here
+            setTimeout(typeWriter, 40); // Adjust typing speed
         }
     }
     typeWriter();
@@ -50,16 +26,13 @@ async function getNewFact() {
         // Apply Typing Effect
         typeFact(factText);
 
-        // Determine Background Image Based on Keywords
-        let bgImage = "images/default-bg-hd.jpg"; // Default image
-        for (let keyword in keywordImages) {
-            if (factText.toLowerCase().includes(keyword.toLowerCase())) {
-                bgImage = keywordImages[keyword];
-                break;
-            }
-        }
+        // Extract a keyword for the background image
+        const keywords = factText.match(/\b[A-Za-z]{4,}\b/g); // Extract words with 4+ letters
+        const keyword = keywords ? keywords[Math.floor(Math.random() * keywords.length)] : "nature";
 
-        document.body.style.background = `url('${bgImage}') no-repeat center center/cover`;
+        // Fetch a relevant background image from Unsplash
+        const bgImageUrl = `https://source.unsplash.com/1600x900/?${keyword}`;
+        document.body.style.background = `url('${bgImageUrl}') no-repeat center center/cover`;
     } catch (error) {
         console.error("Error fetching fact:", error);
         typeFact("Oops! Could not load a new fact. Try again.");
